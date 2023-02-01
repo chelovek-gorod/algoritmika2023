@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en_US">
+    <head>
+        <meta charset="UTF-8">
+        <!-- title and description -->
+        <title>HTML5</title>
+        <meta name="description" content="Введение в HTML5">
+        <!-- viewport -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <!-- icons -->
+        <link rel="icon" href="favicon.png"> <!--32х32-->
+        <link rel="apple-touch-icon" href="src/icons/touch-icon-iphone.png"> <!--60х60-->
+        <link rel="apple-touch-icon" sizes="76x76" href="src/icons/touch-icon-ipad.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="src/icons/touch-icon-iphone-retina.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="src/icons/touch-icon-ipad-retina.png">
+    </head>
+    <style>
+        /*@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');*/
+        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@300&display=swap');
+        body{
+            
+            /*font-family: 'Poiret One', cursive;*/
+            font-family: 'Unbounded', cursive;
+            
+            display:flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            margin:0;
+            padding:0;
+            width: 100vw;
+            height: 100vh;
+
+            background-color: #000000;
+
+            overflow: hidden;
+        }
+
+        div {
+            /*margin-top: 60px;*/
+            padding: 20px;
+            color: #e4e6f5;
+            text-shadow: 0 2px 5px #ab4522;
+            font-size: 22px;
+            /*font-weight: 500;*/
+            background-image: url(./src/images/board-aa.png);
+            border: 2px solid;
+            border-radius: 12px;
+            box-shadow: 0px 4px 16px 0px #ff60ec;
+            z-index: 1;
+            animation: entry-div 3.6s ease-in-out 1;
+        }
+        @keyframes entry-div {
+            0% {transform: scale(0); opacity: 0;}
+            100% {transform: scale(1); opacity: 1;}
+        }
+
+        .colorize-image {
+            display: block;
+            animation: colorize 3.6s linear infinite;
+        }
+        @keyframes colorize {
+            0% {filter: hue-rotate(0);}
+            50% {filter: hue-rotate(180deg);}
+            100% {filter: hue-rotate(0);}
+        }
+
+        img {
+            width: 240px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        span {
+            color: #ffb7f8;
+        }
+
+        a {
+            color: #e4e6f5;
+            transition: color .3s ease-in-out;
+            text-decoration: none;
+            /*font-weight: 300;*/
+        }
+        a:hover {
+            color:#c260ff;
+        }
+
+        canvas {
+            position: absolute;
+            left: 0;
+            right: 0;
+            z-index: 0;
+
+            background-image: url(./src/images/bg_2.jpg); /*./src/images/bg1.jpg*/
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            animation: entry-canvas 2.4s ease-in-out 1;
+        }
+        @keyframes entry-canvas {
+            0% {opacity: 0;}
+            100% {opacity: 1;}
+        }
+    </style>
+    <body>
+        <div>
+            <span class="colorize-image"><img src="./src/images/user.png"></span>
+            1 <span>-</span> <a href="https://project-cosmos-alg.netlify.app/" target="_blank">Рулёв Матвей <span>и</span> Богданович Артём</a><br>
+            1 <span>-</span> <a href="./a-kabariha/index.html" target="_blank">Кабариха Алексей</a><br>
+            3 <span>-</span> <a href="./i-sokolevski/index.html" target="_blank">Соколевский Иван</a><br>
+        </div>
+
+        <script>
+            'use strict';
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            document.body.prepend(canvas);
+
+            let vw, vh, cx, cy, maxDots;
+
+            window.addEventListener('resize', updateSizes);
+            function updateSizes() {
+                canvas.width = vw = window.innerWidth;
+                canvas.height = vh = window.innerHeight;
+                cx = Math.floor(vw / 2);
+                cy = Math.floor(vh / 2);
+
+                maxDots = Math.ceil((vw * vh) / 400);
+            }
+            updateSizes();
+
+            class Dot {
+
+                constructor() {
+                    this.x = Math.floor(Math.random() * vw);
+                    this.y = Math.floor(Math.random() * vh);
+
+                    this.isInner = true;
+
+                    this.dx = cx - this.x;
+                    this.dy = cy - this.y;
+                    this.stepX = (this.x < cx) ? -Math.abs(this.dx / this.dy) : Math.abs(this.dx / this.dy);
+                    this.stepY = (this.y < cy) ? -Math.abs(this.dy / this.dx) : Math.abs(this.dy / this.dx);
+
+                    this.acc =  0.00001 + Math.random() / 10000;
+
+                    this.size = 1;
+                    this.sizeAdd = 0.05 + Math.random() / 10;
+
+                    this.colorR = Math.floor(Math.random() * 256);
+                    this.colorG = Math.floor(Math.random() * 256);
+                    this.colorB = Math.floor(Math.random() * 256);
+                    this.isAddColorR = (Math.random() < 0.5) ? true : false;
+                    this.isAddColorG = (Math.random() < 0.5) ? true : false;
+                    this.isAddColorB = (Math.random() < 0.5) ? true : false;
+
+                    this.alphaSub =  0.001 + Math.random() / 1000;
+                    this.alpha = this.alphaSub;
+
+                    this.color = `rgba(${this.colorR}, ${this.colorG}, ${this.colorB}, ${this.alpha})`;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+
+                    if (!this.isInner) this.size += this.sizeAdd;
+                    this.updateColor()
+                    this.x += this.acc * this.stepX;
+                    this.y += this.acc * this.stepY;
+                    this.acc *= 1.045;
+
+                    if (this.x + this.size < 0 || this.x - this.size > vw || this.y + this.size < 0 || this.y - this.size > vh) this.alpha = 0;
+                }
+
+                updateColor() {
+                    let RGB = Math.ceil( Math.random() * 3 );
+                    switch (RGB) {
+                        case 1 : [this.colorR, this.isAddColorR] = this.updateColorChannel(this.colorR, this.isAddColorR); break;
+                        case 2 : [this.colorG, this.isAddColorG] = this.updateColorChannel(this.colorG, this.isAddColorG); break;
+                        case 3 : [this.colorB, this.isAddColorB] = this.updateColorChannel(this.colorB, this.isAddColorB); break;
+                    }
+                    this.alpha += this.isInner ? this.alphaSub * 2 : -this.alphaSub;
+                    if (this.isInner && this.alpha >= 1){
+                        this.isInner = false;
+                        this.alpha = 1;
+                    }
+                    this.color = `rgba(${this.colorR}, ${this.colorG}, ${this.colorB}, ${this.alpha})`;
+                }
+
+                updateColorChannel(channel, isAdd) {
+                    isAdd = (isAdd && channel < 255) ? true : (channel > 0) ? false : true;
+                    channel = isAdd ? channel + 1 : channel - 1;
+                    return [channel, isAdd];
+                }
+            }
+            let dotsArr = [];
+            let dotAddedCounter = 1;
+
+            function dotGenerator() {
+                let dotNeed = dotAddedCounter - dotsArr.length;
+                for (let i = 0; i < dotNeed; i++) dotsArr.push( new Dot() );
+                if (dotAddedCounter < maxDots) dotAddedCounter++;
+            }
+
+            // ANIMATION
+            function animate() {
+                ctx.clearRect(0, 0, vw, vh);
+
+                dotsArr.forEach( dot => dot.draw() );
+                dotsArr = dotsArr.filter(dot => dot.alpha > 0);
+                if (dotsArr.length < maxDots) dotGenerator();
+
+                requestAnimationFrame(animate);
+            }
+            animate();   
+        </script>
+    </body>
+</html>
+
+
+
+
