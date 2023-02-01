@@ -52,10 +52,11 @@
             border-radius: 12px;
             box-shadow: 0px 4px 16px 0px #ff60ec;
             z-index: 1;
-            animation: entry-div 3.6s ease-in-out 1;
+            animation: entry-div 4.8s ease-in-out 1;
         }
         @keyframes entry-div {
             0% {transform: scale(0); opacity: 0;}
+            50% {transform: scale(0); opacity: 0;}
             100% {transform: scale(1); opacity: 1;}
         }
 
@@ -75,12 +76,14 @@
         }
         
         h3 {
-                font-size: 18px;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #d783fc;
         }
 
         .colorize-image {
             display: block;
-            animation: colorize 3.6s linear infinite;
+            animation: colorize 3s linear infinite;
         }
         @keyframes colorize {
             0% {filter: hue-rotate(0);}
@@ -117,7 +120,7 @@
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            animation: entry-canvas 2.4s ease-in-out 1;
+            animation: entry-canvas 3.6s ease-in-out 1;
         }
         @keyframes entry-canvas {
             0% {opacity: 0;}
