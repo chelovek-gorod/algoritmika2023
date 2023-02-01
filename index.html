@@ -15,11 +15,8 @@
         <link rel="apple-touch-icon" sizes="152x152" href="src/icons/touch-icon-ipad-retina.png">
     </head>
     <style>
-        /*@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');*/
         @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@300&display=swap');
         body{
-            
-            /*font-family: 'Poiret One', cursive;*/
             font-family: 'Unbounded', cursive;
             
             display:flex;
@@ -37,12 +34,11 @@
         }
 
         div {
-            /*margin-top: 60px;*/
+            margin: 20px;
             padding: 20px;
             color: #e4e6f5;
             text-shadow: 0 2px 5px #ab4522;
             font-size: 22px;
-            /*font-weight: 500;*/
             background-image: url(./src/images/board-aa.png);
             border: 2px solid;
             border-radius: 12px;
@@ -79,7 +75,6 @@
             color: #e4e6f5;
             transition: color .3s ease-in-out;
             text-decoration: none;
-            /*font-weight: 300;*/
         }
         a:hover {
             color:#c260ff;
@@ -100,6 +95,12 @@
         @keyframes entry-canvas {
             0% {opacity: 0;}
             100% {opacity: 1;}
+        }
+        
+        @media( max-width: 680px) {
+            div {
+                font-size: 16px;
+            }
         }
     </style>
     <body>
